@@ -1,0 +1,12 @@
+Project Description
+In this project, daily data from OpenIntel is processed and combined with RIPE data, filtered by specific date ranges and IP address types.
+
+Scripts
+avro-file-combiner.py: This script organizes the daily data received from OpenIntel in <yearmonthday> format (e.g., "20240409" for April 4, 2024). It creates an output file called "merged_data_<yearmonthday>.csv" with A and AAAA query types.
+avro-CNAME-RRSIG-filter.py: This script takes the output file from the first script, "merged_data_<yearmonthday>.csv," and filters out the CNAME and RRSIG query types, keeping only A and AAAA query types. The filtered output file is named "merged_data_<yearmonthday>-CNAME-RRSIG-filtered.csv."
+avro_merged_filter.py: This script takes the output file from the second script, "merged_data_<yearmonthday>-CNAME-RRSIG-filtered.csv," and separates the A and AAAA records into two different files. The final outputs are "merged_data_AAAA.csv" for IPv6 records and "merged_data_A.csv" for IPv4 records.
+onlyOne-avro-days.py: This script takes the RIPE data from "birlestir.csv" and sorts it by the days measurements were taken. It calculates the amount of data each day and the average across the measurement days. The output file is named "day-by-day-all_manipulated.csv."
+avro-days-filtered.py: This script takes the output file from the fourth script, "day-by-day-all_manipulated.csv," and receives a date range from the user to filter the measurements within that range. The output file is named "day-<yearmonthday>.csv."
+ip-type-filter.py: This script takes the file "day-<yearmonthday>.csv" and separates the IPv4 and IPv6 addresses in the file. The IPv4 data is saved to "day_<yearmonthday>-A.csv," and the IPv6 data is saved to "day_<yearmonthday>-AAAA.csv."
+final.py: This script combines OpenIntel data filtered into IPv4 and IPv6 from [merged_data_AAAA.csv & merged_data_A.csv] and RIPE data filtered into [day_<yearmonthday>-A.csv & day_<yearmonthday>-AAAA.csv]. It writes intersecting IP addresses into [final_combined-A.csv & final_combined-AAAA.csv].
+To run this project, you need to execute the scripts in the specified order. Each script's output files are used as input for the next script. It's important to follow the correct date formats and file naming conventions throughout the process.
